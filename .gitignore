@@ -48,3 +48,6 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+library-sp18
+.idea
+out
