@@ -49,13 +49,18 @@ public class NBody {
 
             double[] xForces = new double[planets.length];
             double[] yForces = new double[planets.length];
+            // for (int i = 0; i < planets.length; i++) {
+            // for (int j = i + 1; j < planets.length; j++) {
+            // xForces[i] = xForces[i] + planets[i].calcForceExertedByX(planets[j]);
+            // xForces[j] = xForces[j] - planets[i].calcForceExertedByX(planets[j]);
+            // yForces[i] = yForces[i] + planets[i].calcForceExertedByY(planets[j]);
+            // yForces[j] = yForces[j] - planets[i].calcForceExertedByY(planets[j]);
+            // }
+            // planets[i].update(dt, xForces[i], yForces[i]);
+            // }
             for (int i = 0; i < planets.length; i++) {
-                for (int j = i + 1; j < planets.length; j++) {
-                    xForces[i] = xForces[i] + planets[i].xF(planets[j]);
-                    xForces[j] = xForces[j] - planets[i].xF(planets[j]);
-                    yForces[i] = yForces[i] + planets[i].yF(planets[j]);
-                    yForces[j] = yForces[j] - planets[i].yF(planets[j]);
-                }
+                xForces[i] = planets[i].calcNetForceExertedByX(planets);
+                yForces[i] = planets[i].calcNetForceExertedByY(planets);
                 planets[i].update(dt, xForces[i], yForces[i]);
             }
         }

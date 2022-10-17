@@ -35,12 +35,34 @@ public class Planet {
         return G * this.mass * p.mass / Math.pow(this.calcDistance(p), 2);
     }
 
-    public double xF(Planet p) {
+    public double calcForceExertedByX(Planet p) {
         return (this.calcForceExertedBy(p) / this.calcDistance(p)) * (p.xxPos - this.xxPos);
     }
 
-    public double yF(Planet p) {
+    public double calcForceExertedByY(Planet p) {
         return (this.calcForceExertedBy(p) / this.calcDistance(p)) * (p.yyPos - this.yyPos);
+    }
+
+    public double calcNetForceExertedByX(Planet[] planets) {
+        double netForceX = 0;
+        for (Planet p : planets) {
+            if (this.equals(p)) {
+                continue;
+            }
+            netForceX = netForceX + this.calcForceExertedByX(p);
+        }
+        return netForceX;
+    }
+
+    public double calcNetForceExertedByY(Planet[] planets) {
+        double netForceY = 0;
+        for (Planet p : planets) {
+            if (this.equals(p)) {
+                continue;
+            }
+            netForceY = netForceY + this.calcForceExertedByY(p);
+        }
+        return netForceY;
     }
 
     public void update(double dt, double xForce, double yForce) {
