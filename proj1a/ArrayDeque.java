@@ -13,8 +13,8 @@ public class ArrayDeque<T> {
         start = 0;
     }
 
-    private void resize(int size) {
-        T[] newItems = (T[]) new Object[size];
+    private void resize(int newSize) {
+        T[] newItems = (T[]) new Object[newSize];
 
         if (items.length - this.start >= this.size) {
             System.arraycopy(this.items, this.start, newItems, 0, this.size);
