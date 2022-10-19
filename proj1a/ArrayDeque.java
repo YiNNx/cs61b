@@ -1,14 +1,14 @@
 public class ArrayDeque<T> {
 
     private T[] items;
-    private int size;
+    public int size;
     private int start;
 
     private final int RFACTOR = 2;
-    private final int StartingSize = 8;
+    private final int startingSize = 8;
 
     public ArrayDeque() {
-        items = (T[]) new Object[StartingSize];
+        items = (T[]) new Object[startingSize];
         size = 0;
         start = 0;
     }
@@ -20,7 +20,11 @@ public class ArrayDeque<T> {
             System.arraycopy(this.items, this.start, newItems, 0, this.size);
         } else {
             System.arraycopy(this.items, this.start, newItems, 0, items.length - this.start);
-            System.arraycopy(this.items, 0, newItems, items.length - this.start, this.size - (items.length - this.start));
+            System.arraycopy(
+                    this.items, 0, newItems,
+                    items.length - this.start,
+                    this.size - (items.length - this.start)
+            );
         }
         this.items = newItems;
         this.start = 0;
@@ -86,6 +90,10 @@ public class ArrayDeque<T> {
     // Removes and returns the item at the front of the deque. If no such item
     // exists, returns null.
     public T removeFirst() {
+        if(this.isEmpty()){
+            return null;
+        }
+
         if (this.size <= this.items.length / 4) {
             this.resize(items.length / 2);
         }
@@ -101,6 +109,10 @@ public class ArrayDeque<T> {
     // Removes and returns the item at the back of the deque. If no such item
     // exists, returns null.
     public T removeLast() {
+        if(this.isEmpty()){
+            return null;
+        }
+        
         if (this.size <= this.items.length / 4) {
             this.resize(items.length / 2);
         }

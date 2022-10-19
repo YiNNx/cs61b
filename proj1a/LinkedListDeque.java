@@ -8,9 +8,9 @@ public class LinkedListDeque<T> {
     private final Node sentinel;
 
     private class Node {
-        public T data;
-        public Node next;
-        public Node prev;
+        private T data;
+        private Node next;
+        private Node prev;
 
         public Node() {
 
@@ -77,6 +77,10 @@ public class LinkedListDeque<T> {
     // exists, returns null.
     // Do not maintain references to items that are no longer in the deque.
     public T removeFirst() {
+        if(this.isEmpty()){
+            return null;
+        }
+
         T data = this.sentinel.next.data;
         this.sentinel.next.data = null;
         this.sentinel.next.next.prev = this.sentinel;
@@ -90,6 +94,10 @@ public class LinkedListDeque<T> {
     // exists, returns null.
     // Do not maintain references to items that are no longer in the deque.
     public T removeLast() {
+        if(this.isEmpty()){
+            return null;
+        }
+
         T data = this.sentinel.prev.data;
         this.sentinel.prev.data = null;
         this.sentinel.prev.prev.next = this.sentinel;
