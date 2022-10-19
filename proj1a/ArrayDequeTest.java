@@ -1,7 +1,4 @@
-/**
- * Performs some basic linked list tests.
- */
-public class LinkedListDequeTest {
+public class ArrayDequeTest {
 
     /* Utility method for printing out empty checks. */
     public static boolean checkEmpty(boolean expected, boolean actual) {
@@ -47,11 +44,10 @@ public class LinkedListDequeTest {
      * && is the "and" operation.
      */
     public static void addIsEmptySizeTest() {
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
-        lld1.addFirst("front");
 
         // The && operator is the same as "and" in Python.
         // It's a binary operator that returns true if both arguments true, and false otherwise.
@@ -62,7 +58,16 @@ public class LinkedListDequeTest {
         passed = checkSize(2, lld1.size()) && passed;
 
         lld1.addLast("back");
-        passed = checkSize(3, lld1.size()) && passed;
+        lld1.addLast("back");
+        lld1.addLast("back");
+        lld1.addLast("back");
+
+        lld1.removeLast();
+        lld1.removeLast();
+        lld1.removeLast();
+        lld1.removeLast();
+        lld1.removeFirst();
+        passed = checkSize(8, lld1.size()) && passed;
 
         System.out.println("Printing out deque: ");
         lld1.printDeque();
@@ -76,7 +81,7 @@ public class LinkedListDequeTest {
      */
     public static void addRemoveTest() {
 
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         // should be empty
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
@@ -88,18 +93,17 @@ public class LinkedListDequeTest {
         // should not be empty
         passed = checkEmpty(false, lld1.isEmpty()) && passed;
 
+        lld1.removeFirst();
+
         lld1.addFirst(10);
         // should not be empty
         passed = checkEmpty(false, lld1.isEmpty()) && passed;
 
         int val1 = lld1.get(0);
-        passed = checkValue(10, val1);
+        passed = checkValue(11, val1);
 
-        int val2 = lld1.getRecursive(1);
-        passed = checkValue(11, val2);
-
-        int val3 = lld1.getRecursive(2);
-        passed = checkValue(12, val3);
+        int val2 = lld1.get(1);
+        passed = checkValue(12, val2);
 
         printTestStatus(passed);
     }
@@ -107,7 +111,7 @@ public class LinkedListDequeTest {
 
     public static void main(String[] args) {
         System.out.println("Running tests.\n");
-//        addIsEmptySizeTest();
+        addIsEmptySizeTest();
         addRemoveTest();
     }
-} 
+}
