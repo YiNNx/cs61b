@@ -77,7 +77,7 @@ public class LinkedListDeque<T> {
     // exists, returns null.
     // Do not maintain references to items that are no longer in the deque.
     public T removeFirst() {
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             return null;
         }
 
@@ -94,7 +94,7 @@ public class LinkedListDeque<T> {
     // exists, returns null.
     // Do not maintain references to items that are no longer in the deque.
     public T removeLast() {
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             return null;
         }
 
