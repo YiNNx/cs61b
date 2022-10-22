@@ -47,7 +47,7 @@ public class LinkedListDequeTest {
      * && is the "and" operation.
      */
     public static void addIsEmptySizeTest() {
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        LinkedListDeque lld1 = new LinkedListDeque();
 
         boolean passed = checkEmpty(true, lld1.isEmpty());
 
