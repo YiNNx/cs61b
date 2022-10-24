@@ -1,6 +1,6 @@
 public class UnionFindTest {
     public static void main(String[] args) {
-        UnionFind u=new UnionFind(5);
+        UnionFind u=new UnionFind(1000);
         u.union(0,3);
         u.union(1,3);
         u.union(2,4);
