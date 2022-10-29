@@ -20,6 +20,7 @@ public class UnionFind {
 
     // Returns the size of the set v1 belongs to.
     public int sizeOf(int v1) {
+        validate(v1);
         return -parent[find(v1)];
     }
 
