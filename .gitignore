@@ -5,7 +5,7 @@
 !**.json
 !.expelimicate
 !.gitignore
-.class
+*.class
 *.log
 *.ctxt
 .mtj.tmp/
@@ -15,6 +15,7 @@
 *.zip
 *.tar.gz
 *.rar
+**/out/
 hs_err_pid*
 *~
 .fuse_hidden*
@@ -48,6 +49,3 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
-library-sp18
-.idea
-out

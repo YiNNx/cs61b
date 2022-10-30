@@ -1,7 +1,5 @@
 package hw3.hash;
-
 import java.awt.Font;
-
 import edu.princeton.cs.algs4.StdDraw;
 
 public class HashTableDrawingUtility {

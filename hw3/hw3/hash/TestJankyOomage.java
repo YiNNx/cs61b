@@ -1,12 +1,10 @@
 package hw3.hash;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.ArrayList;
-
 import edu.princeton.cs.algs4.StdRandom;
 
 public class TestJankyOomage {
@@ -31,10 +29,8 @@ public class TestJankyOomage {
 
     }
 
-    /**
-     * After you've written haveNiceHashCodeSpread,
-     * run this and it should fail.
-     */
+    /** After you've written haveNiceHashCodeSpread,
+     * run this and it should fail. */
     @Test
     public void testRandomOomagesHashCodeSpread() {
         List<Oomage> oomages = new ArrayList<>();

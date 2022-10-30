@@ -5,15 +5,13 @@ import org.junit.Test;
 public class IntListTest {
 
     /**
-     * Example test that verifies correctness of the IntList of static
+     * Example test that verifies correctness of the IntList.of static
      * method. The main point of this is to convince you that
      * assertEquals knows how to handle IntLists just fine.
      */
 
     @Test
     public void testList() {
-        int item=0;
-        System.out.println(item);
         IntList one = new IntList(1, null);
         IntList twoOne = new IntList(2, one);
         IntList threeTwoOne = new IntList(3, twoOne);
@@ -31,7 +29,7 @@ public class IntListTest {
 
     /**
      * Do not use the new keyword in your tests. You can create
-     * lists using the handy IntList.Of method.
+     * lists using the handy IntList.of method.
      * <p>
      * Make sure to include test cases involving lists of various sizes
      * on both sides of the operation. That includes the empty of, which
