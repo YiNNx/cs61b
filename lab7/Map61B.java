@@ -4,8 +4,12 @@ import java.util.Set;
  * declaration, though you can use other formal type parameters if you'd like.
  */
 public interface Map61B<K, V> extends Iterable<K> {
-    /** Removes all of the mappings from this map. */
-    void clear();
+    /**
+     * Removes all the mappings from this map.
+     */
+    default void clear() {
+
+    }
 
     /* Returns true if this map contains a mapping for the specified key. */
     boolean containsKey(K key);
