@@ -1,6 +1,8 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.Random;
+
 /** Tests by Brendan Hu, Spring 2015, revised for 2016 by Josh Hug */
 public class TestBSTMap {
 
@@ -19,19 +21,20 @@ public class TestBSTMap {
     //assumes put/size/containsKey/get work
 	@Test
     public void sanityClearTest() {
-    	BSTMap<String, Integer> b = new BSTMap<String, Integer>();
-        for (int i = 0; i < 455; i++) {
-            b.put("hi" + i, 1+i);
-            //make sure put is working via containsKey and get
-            assertTrue( null != b.get("hi" + i) && (b.get("hi"+i).equals(1+i))
-                        && b.containsKey("hi" + i));
+    	BSTMap<Integer, Integer> b = new BSTMap<>();
+        Random rand = new Random();
+
+
+
+        for (int i = 63; i >=0; i--) {
+            int n = rand.nextInt(200);
+            b.put(n,n);
+            System.out.println("------------------");
+            System.out.println(n);
+            b.printTree();
         }
-        assertEquals(455, b.size());
-        b.clear();
-        assertEquals(0, b.size());
-        for (int i = 0; i < 455; i++) {
-            assertTrue(null == b.get("hi" + i) && !b.containsKey("hi" + i));
-        }
+        b.printTree();
+
     }
 
     // assumes put works
