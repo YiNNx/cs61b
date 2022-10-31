@@ -2,20 +2,98 @@ import java.util.Set;
 import java.util.Iterator;
 
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
-
     Node sentinel;
     int size;
 
     public BSTMap() {
         size = 0;
-        Node n = new Node(null, null);
-        n.changeToBlack();
-        sentinel = n;
+        sentinel = new Node(null, null);
+        sentinel.changeToBlack();
     }
 
     private Node getRoot() {
         return sentinel.left;
     }
+
+    public void printTree() {
+        if (this.getRoot() == null) return;
+        this.getRoot().printTree(getRoot(), "      ", true);
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        if (this.getRoot() == null) return false;
+        return this.getRoot().contains(key);
+    }
+
+    @Override
+    public V get(K key) {
+        if (this.getRoot() == null) return null;
+        return this.getRoot().gets(key);
+    }
+
+    @Override
+    public int size() {
+        return this.size;
+    }
+
+    @Override
+    public void put(K key, V value) {
+        if (this.getRoot() == null) {
+            Node n = new Node(key, value);
+            n.changeToBlack();
+            sentinel.connectLeft(n);
+            ++this.size;
+            return;
+        }
+
+        Node n = new Node(key, value);
+        Node cur = this.getRoot();
+        while (true) {
+            int cmp = cur.compareTo(n);
+            if (cmp == 0) {
+                cur.val = n.val;
+                break;
+            } else if (cmp > 0) {
+                if (cur.left == null) {
+                    cur.connectLeft(n);
+                    n.balance();
+                    break;
+                }
+                cur = cur.left;
+            } else {
+                if (cur.right == null) {
+                    cur.connectRight(n);
+                    n.balance();
+                    break;
+                }
+                cur = cur.right;
+            }
+        }
+        ++this.size;
+        this.getRoot().changeToBlack();
+    }
+
+    @Override
+    public Set<K> keySet() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public V remove(K key) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public V remove(K key, V value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Iterator<K> iterator() {
+        throw new UnsupportedOperationException();
+    }
+
 
     private class Node {
         K key;
@@ -85,18 +163,26 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             }
         }
 
-        public void printInOrder() {
-            if (this.left != null) this.left.printInOrder();
-            System.out.println(key + ":" + val);
-            if (this.right != null) this.right.printInOrder();
+        private void balance() {
+            Node n = this;
+            while (n.parent != sentinel && n.isRed()) {
+                if (n.parent.right == n) { // right leaning
+                    if (n.parent.left != null && n.parent.left.isRed()) // flip
+                        n.parent.flipsColor();
+                    else { // right lean rotates to left
+                        n.parent.rotateLeft();
+                        n = n.left;
+                    }
+                }
+                if (n.parent.left == n) { // left leaning
+                    if (n.parent.isRed() && n.parent.parent.left == n.parent) // two consecutive left red link
+                        n.parent.parent.rotateRight();
+                    if (n.parent.right != null && n.parent.right.isRed()) // flip
+                        n.parent.flipsColor();
+                }
+                n = n.parent;
+            }
         }
-
-        public void printPreOrder() {
-            System.out.println(key + ":" + val);
-            if (this.left != null) this.left.printPreOrder();
-            if (this.right != null) this.right.printPreOrder();
-        }
-
 
         private void flipsColor() {
             this.left.changeToBlack();
@@ -156,118 +242,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             }
 
         }
-    }
-
-
-    public void printTree() {
-        if (this.getRoot() == null) return;
-        this.getRoot().printTree(getRoot(), "      ", true);
-    }
-
-    @Override
-    public boolean containsKey(K key) {
-        if (this.getRoot() == null) return false;
-        return this.getRoot().contains(key);
-    }
-
-    @Override
-    public V get(K key) {
-        if (this.getRoot() == null) return null;
-        return this.getRoot().gets(key);
-    }
-
-    @Override
-    public int size() {
-        return this.size;
-    }
-
-    @Override
-    public void put(K key, V value) {
-        if (this.getRoot() == null) {
-            Node n = new Node(key, value);
-            n.changeToBlack();
-            sentinel.connectLeft(n);
-            ++this.size;
-            return;
-        }
-
-        Node n = new Node(key, value);
-        Node cur = this.getRoot();
-        while (true) {
-            int cmp = cur.compareTo(n);
-            if (cmp == 0) {cur.val = n.val;break;}
-            else if (cmp > 0) {
-                if (cur.left == null) {
-                    cur.connectLeft(n);
-                    while(n.parent != sentinel &&n.isRed()){
-                        if (n.parent.right == n) {
-                            if (n.parent.left != null && n.parent.left.isRed()) n.parent.flipsColor();
-                            else {n.parent.rotateLeft();n=n.left;}
-                        }
-                        if(n.parent.left == n) {
-                            if (n.parent.isRed() && n.parent.parent.left == n.parent)
-                                n.parent.parent.rotateRight();
-                            if( n.parent.right!=null&&n.parent.right.isRed())
-                                n.parent.flipsColor();
-                        }
-                        n=n.parent;
-                    }
-                    break;
-                }
-                cur=cur.left;
-            } else {
-                if (cur.right == null) {
-                    cur.connectRight(n);
-                    while (n.parent != sentinel && n.isRed()) {
-                        if (n.parent.right == n) {
-                            if (n.parent.left != null && n.parent.left.isRed()) n.parent.flipsColor();
-                            else {n.parent.rotateLeft();n=n.left;}
-                        }
-                        if(n.parent.left == n) {
-                            if (n.parent.isRed() && n.parent.parent.left == n.parent)
-                                n.parent.parent.rotateRight();
-                            if( n.parent.right!=null&&n.parent.right.isRed())
-                                n.parent.flipsColor();
-                        }
-                        n = n.parent;
-                    }
-                    break;
-                }
-                cur = cur.right;
-            }
-        }
-        ++this.size;
-        this.getRoot().changeToBlack();
-    }
-
-    public void printInOrder() {
-        if (this.getRoot() == null) return;
-        this.getRoot().printInOrder();
-    }
-
-    public void printPreOrder() {
-        if (this.getRoot() == null) return;
-        this.getRoot().printPreOrder();
-    }
-
-    @Override
-    public Set<K> keySet() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public V remove(K key) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
     }
 
 

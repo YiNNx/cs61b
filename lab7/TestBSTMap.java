@@ -26,12 +26,9 @@ public class TestBSTMap {
 
 
 
-        for (int i = 63; i >=0; i--) {
+        for (int i = 1023; i >=0; i--) {
             int n = rand.nextInt(200);
             b.put(n,n);
-            System.out.println("------------------");
-            System.out.println(n);
-            b.printTree();
         }
         b.printTree();
 

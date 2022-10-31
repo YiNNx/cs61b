@@ -27,7 +27,7 @@ public class InsertRandomSpeedTest {
         do {
             System.out.print("\nEnter # strings to insert into the maps: ");
             int N = waitForPositiveInt(input);
-            timeRandomMap61B(new ULLMap<>(), N, L);
+//            timeRandomMap61B(new ULLMap<>(), N, L);
             timeRandomMap61B(new BSTMap<>(), N, L);
             timeRandomTreeMap(new TreeMap<>(), N, L);
 
@@ -44,7 +44,8 @@ public class InsertRandomSpeedTest {
         String s = "cat";
         for (int i = 0; i < N; i++) {
             s = StringUtils.randomString(L);
-            map61B.put(s, new Integer(i));
+            map61B.put(s, i);
+            map61B.get(s);
         }
         return sw.elapsedTime();
     }
@@ -56,7 +57,8 @@ public class InsertRandomSpeedTest {
         String s = "cat";
         for (int i = 0; i < N; i++) {
             s = StringUtils.randomString(L);
-            treeMap.put(s, new Integer(i));
+            treeMap.put(s, i);
+            treeMap.get(s);
         }
         return sw.elapsedTime();
     }
@@ -68,7 +70,7 @@ public class InsertRandomSpeedTest {
         String s = "cat";
         for (int i = 0; i < N; i++) {
             s = StringUtils.randomString(L);
-            treeMap.put(s, new Integer(i));
+            treeMap.put(s, i);
         }
         return sw.elapsedTime();
     }
