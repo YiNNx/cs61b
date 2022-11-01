@@ -1,6 +1,9 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /** Tests by Brendan Hu, Spring 2015, revised for 2016 by Josh Hug */
@@ -74,7 +77,7 @@ public class TestMyHashMap {
     public void sanityPutTest() {
         MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
         b.put("hi", 1);
-        assertTrue(b.containsKey("hi") && b.get("hi") != null);
+        assertTrue(b.containsKey("hi") && b.get("hi") ==1);
     }
 
     /* 
@@ -142,5 +145,6 @@ public class TestMyHashMap {
 
     public static void main(String[] args) {
         jh61b.junit.TestRunner.runTests(TestMyHashMap.class);
+
     }
 }

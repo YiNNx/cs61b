@@ -2,8 +2,8 @@ import java.util.Set;
 import java.util.Iterator;
 
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
-    Node sentinel;
-    int size;
+    private Node sentinel;
+    private int size;
 
     public BSTMap() {
         size = 0;
@@ -96,14 +96,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
 
     private class Node {
-        K key;
-        V val;
-        Node left;
-        Node right;
-        Node parent;
-        boolean isRed;
+        final private K key;
+        private V val;
+        private Node left;
+        private Node right;
+        private Node parent;
+        private boolean isRed;
 
-        public Node(K key, V val) {
+        private Node(K key, V val) {
             this.key = key;
             this.val = val;
             this.isRed = true;
@@ -135,7 +135,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             }
         }
 
-        public boolean contains(K key) {
+        private boolean contains(K key) {
             int cmp = this.key.compareTo(key);
             if (cmp == 0) return true;
             else if (cmp > 0) {
@@ -151,7 +151,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             return this.key.compareTo(N.key);
         }
 
-        public V gets(K key) {
+        private V gets(K key) {
             int cmp = this.key.compareTo(key);
             if (cmp == 0) return this.val;
             else if (cmp > 0) {
@@ -220,7 +220,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             this.isRed = isRedL;
         }
 
-        public void printTree(Node n, String indent, boolean print_leaf) {
+        private void printTree(Node n, String indent, boolean print_leaf) {
             if (n == null) {
                 System.out.print((print_leaf ? indent + "   |-+*\n" : ""));
             } else {

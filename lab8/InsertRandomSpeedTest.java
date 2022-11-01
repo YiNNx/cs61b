@@ -30,7 +30,7 @@ public class InsertRandomSpeedTest {
                             waitForPositiveInt(input), L);
 
             System.out.print("\nEnter # strings to insert into your MyHashMap: ");
-            timeRandomMap61B(new MyHashMap<String, Integer>(), 
+            timeRandomMap61B(new MyHashMap<String, Integer>(1000,0.8),
                             waitForPositiveInt(input), L);
 
             System.out.print("\nEnter # strings to insert into Java's HashMap: ");
@@ -52,7 +52,8 @@ public class InsertRandomSpeedTest {
         String s = "cat";
         for (int i = 0; i < N; i++) {
             s = StringUtils.randomString(L);
-            map61B.put(s, new Integer(i));
+            map61B.put(s, i);
+            if(!map61B.get(s).equals(i)) System.out.println("oops");
         }
         return sw.elapsedTime();
     }
@@ -66,7 +67,8 @@ public class InsertRandomSpeedTest {
         String s = "cat";
         for (int i = 0; i < N; i++) {
             s = StringUtils.randomString(L);
-            hashMap.put(s, new Integer(i));
+            hashMap.put(s, i);
+            hashMap.get(s);
         }
         return sw.elapsedTime();
     }
