@@ -23,11 +23,8 @@ public class TestBSTMap {
     public void sanityClearTest() {
     	BSTMap<Integer, Integer> b = new BSTMap<>();
         Random rand = new Random();
-
-
-
         for (int i = 1023; i >=0; i--) {
-            int n = rand.nextInt(200);
+            int n = rand.nextInt(2048);
             b.put(n,n);
         }
         b.printTree();

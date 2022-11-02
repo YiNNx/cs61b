@@ -17,7 +17,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     public void printTree() {
         if (this.getRoot() == null) return;
-        this.getRoot().printTree(getRoot(), "      ", true);
+        this.getRoot().printTree(getRoot(), "", false);
     }
 
     @Override
