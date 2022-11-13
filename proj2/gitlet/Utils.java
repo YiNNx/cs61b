@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
 
+import static java.lang.System.exit;
+
 
 /** Assorted utilities.
  *
@@ -121,6 +123,7 @@ class Utils {
                 throw
                     new IllegalArgumentException("cannot overwrite directory");
             }
+            file.getParentFile().mkdirs();
             BufferedOutputStream str =
                 new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             for (Object obj : contents) {
@@ -132,6 +135,8 @@ class Utils {
             }
             str.close();
         } catch (IOException | ClassCastException excp) {
+            System.out.println(excp.getMessage());
+            System.out.println(excp.getCause());
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
@@ -152,9 +157,35 @@ class Utils {
         }
     }
 
+    static <T extends Serializable> T tryReadObject(File file,
+                                                 Class<T> expectedClass) {
+        try {
+            ObjectInputStream in =
+                    new ObjectInputStream(new FileInputStream(file));
+            T result = expectedClass.cast(in.readObject());
+            in.close();
+            return result;
+        } catch (IOException | ClassCastException
+                 | ClassNotFoundException excp) {
+            return null;
+        }
+    }
+
+
+
     /** Write OBJ to FILE. */
     static void writeObject(File file, Serializable obj) {
+        file.getParentFile().mkdirs();
         writeContents(file, serialize(obj));
+    }
+
+    static void newFile(File file){
+        try {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /* DIRECTORIES */
@@ -191,14 +222,14 @@ class Utils {
     /* OTHER FILE UTILITIES */
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  analogous to the { java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
 
     /** Return the concatentation of FIRST and OTHERS into a File designator,
-     *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
+     *  analogous to the { java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(File first, String... others) {
         return Paths.get(first.getPath(), others).toFile();
@@ -235,5 +266,10 @@ class Utils {
     static void message(String msg, Object... args) {
         System.out.printf(msg, args);
         System.out.println();
+    }
+
+    static void exitWithMessage(String msg, Object... args) {
+        message(msg,args);
+        exit(0);
     }
 }
