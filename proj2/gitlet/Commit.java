@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Represents a gitlet commit object.
@@ -54,16 +55,17 @@ public class Commit implements Serializable, Dumpable {
     }
 
     private static Tree addStaged(Tree parent, StagingArea additon, StagingArea removal) {
-        Tree res= (Tree) parent.clone();
+        Tree res = (Tree) parent.clone();
         res.putAll(additon);
-        for(String key:removal.keySet()){
+        for (String key : removal.keySet()) {
             res.remove(key);
         }
         return res;
     }
 
     public void log() {
-        System.out.printf("===\ncommit %s\nDate: %s\n%s\n\n", this.id(), date.toString(), message);
+        String formatted= String.format("%ta %tb %td %tT %tY %tz", date, date,date, date, date,date);
+        System.out.printf("===\ncommit %s\nDate: %s\n%s\n\n", this.id(),formatted, message);
     }
 
     public String id() {

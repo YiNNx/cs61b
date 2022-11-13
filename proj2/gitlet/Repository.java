@@ -190,7 +190,7 @@ public class Repository {
             if (allFiles != null) {
                 for (String file : allFiles) {
                     AddStage addStage = AddStage.readFromLocal();
-                    if (!Head.loadRefCommit().getTree().containsKey(file)&& !addStage.containsKey(file) && b.getRefCommit().getTree().containsKey(file))
+                    if (!Head.loadRefCommit().getTree().containsKey(file) && !addStage.containsKey(file) && b.getRefCommit().getTree().containsKey(file))
                         exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
                 }
             }
