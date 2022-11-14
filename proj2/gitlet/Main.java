@@ -28,7 +28,7 @@ public class Main {
                 repo.add(args[1]);
                 break;
             case "commit":
-                if (args.length != 2) {
+                if (args.length != 2 || args[1].equals("")) {
                     Utils.exitWithMessage("Please enter a commit message.");
                 }
                 repo.commit(args[1]);

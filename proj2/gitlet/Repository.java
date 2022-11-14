@@ -8,14 +8,10 @@ import java.util.Set;
 
 import static gitlet.Utils.*;
 
-// TODO: any imports you need here
-
 /**
  * Represents a gitlet repository.
- *  TODO: It's a good idea to give a description here of what else this Class
- *  does at a high level.
  *
- * @author TODO
+ * @author yinn
  */
 public class Repository {
     /**
@@ -60,11 +56,17 @@ public class Repository {
         Blob blob = new Blob(fileAdd);
 
         AddStage addStage = AddStage.readFromLocal();
+        RmStage rmStage = RmStage.readFromLocal();
+        /* Adds a copy of the file as it currently exists */
         if (!blob.id().equals(Head.loadRefCommit().getTree().get(filenameAdd))) {
             blob.writeToRepo();
             addStage.put(filenameAdd, blob.id());
-        } else if (AddStage.readFromLocal().containsKey(filenameAdd)) {
+        }
+        /* If the current working version of the file is identical to the version in the current commit */
+        else if (AddStage.readFromLocal().containsKey(filenameAdd)) {
             addStage.remove(filenameAdd);
+        } else if (RmStage.readFromLocal().containsKey(filenameAdd)) {
+
         }
         addStage.writeToLocal();
     }
@@ -80,15 +82,11 @@ public class Repository {
             exitWithMessage("No changes added to the commit.");
         }
 
-        Commit HEADRefCommit = Head.loadRefCommit();
-        Commit newCommit = new Commit(commitMsg, HEADRefCommit, addStage, rmStage);
+        Commit headRefCommit = Head.loadRefCommit();
+        Commit newCommit = new Commit(commitMsg, headRefCommit, addStage, rmStage);
         newCommit.writeToLocal();
 
-        addStage.clear();
-        rmStage.clear();
-        addStage.writeToLocal();
-        rmStage.writeToLocal();
-
+        clearStage();
         Head.loadRefBranch().updateRefCommitId(newCommit.id());
     }
 
@@ -100,14 +98,16 @@ public class Repository {
         AddStage addStage = AddStage.readFromLocal();
         RmStage rmStage = RmStage.readFromLocal();
         File rmFile = join(CWD, rmFilename);
-        Commit HEAD = Head.loadRefCommit();
+        Commit head = Head.loadRefCommit();
 
         if (addStage != null && addStage.containsKey(rmFilename)) {
             addStage.remove(rmFilename);
             addStage.writeToLocal();
-        } else if (rmFile.exists() && HEAD.getTree().containsKey(rmFilename)) {
-            rmStage.put(rmFilename, HEAD.getTree().get(rmFilename));
-            Utils.restrictedDelete(rmFile);
+        } else if (head.getTree().containsKey(rmFilename)) {
+            rmStage.put(rmFilename, head.getTree().get(rmFilename));
+            if (new Blob(rmFile).id().equals(head.getTree().get(rmFilename))) {
+                Utils.restrictedDelete(rmFile);
+            }
             rmStage.writeToLocal();
         } else {
             exitWithMessage("No reason to remove the file.");
@@ -132,13 +132,17 @@ public class Repository {
         }
 
         String[] dirs = OBJECTS_DIR.list();
-        if (dirs == null) return;
+        if (dirs == null) {
+            return;
+        }
         for (String dir : dirs) {
             String[] objs = join(OBJECTS_DIR, dir).list();
             for (String obj : objs) {
                 File objFile = join(OBJECTS_DIR, dir, obj);
                 Commit commit = Utils.tryReadObject(objFile, Commit.class);
-                if (commit != null) commit.log();
+                if (commit != null) {
+                    commit.log();
+                }
             }
         }
     }
@@ -149,13 +153,17 @@ public class Repository {
         }
 
         String[] dirs = OBJECTS_DIR.list();
-        if (dirs == null) return;
+        if (dirs == null) {
+            return;
+        }
         for (String dir : dirs) {
             String[] objs = join(OBJECTS_DIR, dir).list();
             for (String obj : objs) {
                 File objFile = join(OBJECTS_DIR, dir, obj);
                 Commit commit = Utils.tryReadObject(objFile, Commit.class);
-                if (commit != null && commit.getMsg().equals(msg)) System.out.println(commit.id());
+                if (commit != null && commit.getMsg().equals(msg)) {
+                    System.out.println(commit.id());
+                }
             }
         }
     }
@@ -173,25 +181,31 @@ public class Repository {
 
     public void checkout(String[] args) {
         int bar = Arrays.asList(args).indexOf("--");
+        if (bar == -1 && args.length > 2) {
+            exitWithMessage("Incorrect operands.");
+        }
         if (bar == -1) { // checkout [branch name]
             String branchName = args[1];
             if (!GITLET_DIR.exists()) {
                 exitWithMessage("Not in an initialized Gitlet directory.");
             }
-            if (!Branch.getFile(branchName).exists())
+            if (!Branch.getFile(branchName).exists()) {
                 exitWithMessage("No such branch exists.");
+            }
 
             Branch b = Branch.loadFromLocalByName(branchName);
 
-            if (Head.loadRefBranch().equals(b))
+            if (Head.loadRefBranch().equals(b)) {
                 exitWithMessage("No need to checkout the current branch.");
+            }
 
             List<String> allFiles = Utils.plainFilenamesIn(CWD);
             if (allFiles != null) {
                 for (String file : allFiles) {
                     AddStage addStage = AddStage.readFromLocal();
-                    if (!Head.loadRefCommit().getTree().containsKey(file) && !addStage.containsKey(file) && b.getRefCommit().getTree().containsKey(file))
+                    if (!Head.loadRefCommit().getTree().containsKey(file) && !addStage.containsKey(file) && b.getRefCommit().getTree().containsKey(file)) {
                         exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
+                    }
                 }
             }
 
@@ -217,7 +231,9 @@ public class Repository {
                 checkoutCommit = Head.loadRefCommit();
             }
             String checkoutBlobId = checkoutCommit.getTree().get(filename);
-            if (checkoutBlobId == null) exitWithMessage("File does not exist in that commit.");
+            if (checkoutBlobId == null) {
+                exitWithMessage("File does not exist in that commit.");
+            }
             Blob.loadFromLocalById(checkoutBlobId).overwriteWorkingDir();
         }
     }
@@ -227,10 +243,12 @@ public class Repository {
             exitWithMessage("Not in an initialized Gitlet directory.");
         }
 
-        Commit HEAD = Head.loadRefCommit();
+        Commit head = Head.loadRefCommit();
 
-        Branch newBranch = new Branch(branchName, HEAD.id());
-        if (newBranch.exist()) exitWithMessage("A branch with that name already exists.");
+        Branch newBranch = new Branch(branchName, head.id());
+        if (newBranch.exist()) {
+            exitWithMessage("A branch with that name already exists.");
+        }
         newBranch.createLocally();
     }
 
@@ -239,13 +257,15 @@ public class Repository {
             exitWithMessage("Not in an initialized Gitlet directory.");
         }
 
-        if (!Branch.getFile(branchName).exists())
+        if (!Branch.getFile(branchName).exists()) {
             exitWithMessage("A branch with that name does not exist.");
+        }
 
         Branch branchRm = Branch.loadFromLocalByName(branchName);
 
-        if (branchRm.name.equals(Head.getRefBranchName()))
+        if (branchRm.name.equals(Head.getRefBranchName())) {
             exitWithMessage("Cannot remove the current branch.");
+        }
 
         branchRm.deleteLocally();
     }
@@ -255,9 +275,11 @@ public class Repository {
 
         System.out.println("=== Branches ===");
         for (String branch : branches) {
-            if (join(BRANCHES_DIR, branch).equals(join(GITLET_DIR, readContentsAsString(Head.HEAD_FILE))))
+            if (join(BRANCHES_DIR, branch).equals(join(GITLET_DIR, readContentsAsString(Head.HEAD_FILE)))) {
                 System.out.printf("*%s\n", branch);
-            else System.out.printf("%s\n", branch);
+            } else {
+                System.out.printf("%s\n", branch);
+            }
         }
         System.out.println();
     }
@@ -281,8 +303,9 @@ public class Repository {
         if (allFiles != null) {
             for (String file : allFiles) {
                 String fileId = new Blob(join(CWD, file)).id();
-                if (Head.loadRefCommit().getTree().containsKey(file) && !getObjFile(fileId).exists())
+                if (Head.loadRefCommit().getTree().containsKey(file) && !getObjFile(fileId).exists()) {
                     System.out.println(file);
+                }
             }
         }
 
@@ -297,8 +320,9 @@ public class Repository {
         RmStage rmStage = RmStage.readFromLocal();
         if (allFiles != null) {
             for (String file : allFiles) {
-                if ((!Head.loadRefCommit().getTree().containsKey(file) && !addStage.containsKey(file)) || rmStage.containsKey(file))
+                if ((!Head.loadRefCommit().getTree().containsKey(file) && !addStage.containsKey(file)) || rmStage.containsKey(file)) {
                     System.out.println(file);
+                }
             }
         }
         System.out.println();
@@ -317,10 +341,5 @@ public class Repository {
         rmStage.writeToLocal();
 
     }
-//
-//    static void branchRefTo(String branch, Commit commit) {
-//        writeContents(Branch.getFile(branch), commit.id());
-//    }
-//
 
 }

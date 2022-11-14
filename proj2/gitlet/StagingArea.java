@@ -3,9 +3,6 @@ package gitlet;
 import java.io.Serializable;
 import java.util.Map;
 
-import static gitlet.Utils.readObject;
-import static gitlet.Utils.writeObject;
-
 public interface StagingArea extends Map<String, String>, Serializable, Dumpable {
     void writeToLocal();
 

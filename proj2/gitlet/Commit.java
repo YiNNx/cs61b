@@ -84,7 +84,7 @@ public class Commit implements Serializable, Dumpable {
     }
 
     public static Commit loadFromLocalById(String id) {
-        if (id == null || id.equals("")) return null;
+        if (id == null || id.equals("")) {return null;}
         return Utils.readObject(Repository.getObjFile(id), Commit.class);
     }
 

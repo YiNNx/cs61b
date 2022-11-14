@@ -33,7 +33,7 @@ public class Blob implements Serializable, Dumpable {
     }
 
     public static Blob loadFromLocalById(String id) {
-        if (id == null || id.equals("")) return null;
+        if (id == null || id.equals("")) {return null;}
         return Utils.readObject(Repository.getObjFile(id), Blob.class);
     }
 
